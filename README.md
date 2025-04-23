@@ -508,6 +508,13 @@ IoT 개발자 C#/winApp 리포지토리 2025
         
         <img src="./image/cs0009.png" width="600">
 
+
+
+        https://github.com/user-attachments/assets/41547c14-1165-44e1-9d1f-93e2360632e0
+
+
+        
+
 ## 5일차
 
 ### C# 문법

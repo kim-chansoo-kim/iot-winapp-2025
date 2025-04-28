@@ -517,9 +517,21 @@ IoT 개발자 C#/winApp 리포지토리 2025
 
 ## 5일차
 
+### 윈앱 컨트롤 4
+    - StatusStrip : 상태표시줄 컨트롤. 서브 컨트롤 추가 가능
+    - 이름은 거의 변경 안함. 서브 컨트롤 이름을 변경
+    - StatusLabel : 글자만 표시, Lbl~ 로 사용
+    - ProgressBar : 진행바 표시, Prg~ 이름 시작
+    - DropDownButton : 드롭다운버튼, 이벤트 추가
+    - SplitButton : 버튼, 이벤트 추가
+    - SizingGrip : 오른쪽 하단의 사이즈조절 아이콘 표시
+
+### VS 사용팁
+    - 소스코드 들여쓰기 문제가 발생하면 > 편집 > 고급 > 문서서식 클릭
+
 ### C# 문법
 - 기본 문법
-    1. 델리게이트(대리자), 이벤트
+    1. 델리게이트(대리자), 이벤트 - [소스](./day05/Day05study/SyntaxWinApp01/FrmMain.cs)
         - **대리자** : 메서드를 변수처럼 저장하고 호출할 수 있는 타입
             - C++ 함수포인터, 파이썬 콜백함수
         - 대리자는 실행할 메서드를 들고 있고, 대리자를 호출하면 대리자가 메서드를 대신 호출
@@ -566,8 +578,10 @@ IoT 개발자 C#/winApp 리포지토리 2025
         - 실제 실무에서는
             - FrmMain() 생성자, FrmMain_Load(), FrmMain_FormClosing()으로 대부분 작업
 
-- 고급 문법()
-    1. 람다식 - C# 3.0부터 도입
+            <img src="./image/cs0011.png" width="600">
+
+- 고급 문법
+    1. 람다식 - C# 3.0부터 도입 - [소스](./day05/Day05study/SyntaxWinApp02/FrmMain.cs)
         - 간단한 메서드를 한 줄로 표현하는 문법
         - 코드를 간결하게 작성하고 싶을 때 사용 
 
@@ -576,24 +590,373 @@ IoT 개발자 C#/winApp 리포지토리 2025
         - Database 학습 SQL과 유사
         - 데이터를 SQL처럼 Query 할 수 있는 문법
 
-    3. 속성
-    4. 제네릭
-    5. 비동기, 스레드
+    3. 속성 - Property
+        - 객체지향 클래스에서 멤버변수(명사) 중 public 변수
+        - 첫번째 글자 대문자
+        - { get; set; } 형태로 구성
+        - 일반 클래스(멤버변수) : 객체 데이터 저장, 상태 표현
+            - 코드로만 작성
+        - UI 클래스(속성) : UI 상태나 외형, 기능 컨트롤
+            - 폼 디자인, 코드 둘 다 사용
+        - Form.Designer.cs 내용은 폼 디자인에서 마우스나 디자인 설정에 변경하는 값으로 되도록이면 수정하지 말 것
+        - Form_Load 이벤트에 코딩으로 초기화
 
-### WinForms 추가
-- 추가 내용
-    - Form_Load 이벤트
+    4. partial 클래스 : C#에만 존재
+        - 나누어진 같은 이름의 클래스를 컴파일시 하나로 합쳐주는 기능
+        - 디자인에 관련된 소스코드는 *.Designer.cs로 분리
+        - 기능에 필요한 소스코드만 *.cs로 분리
+
+        ```C#
+        // 1. FrmMain.cs
+        public partial class FrmMain : Form
+        {  
+
+        // 2. FrmMain.Designer.cs
+        partial class FrmMain
+        {      
+
+        // 3. FrmMain.resx 특이케이스  
+        ```
+
+    5. 제네릭 : Generic
+        - 파이썬에는 필요없음 -> 타입지정이 자유로움
+        - Java, C# 등의 엄격한 데이터타입 객체지향언어에 반드시 필요
+        - 제네릭 메서드
+        - 제네릭이 없으면,
+        - 실제, Console.cs의 WriteLine()이 증거
+        ```C#
+        public void PrintInt(int data) { Console.WriteLine(data); }
+        public void PrintString(string data) { Console.WriteLine(data); }
+        public void PrintFloat(float data) { Console.WriteLine(data); }
+        ```
+        - 제네릭이 있으면
+        ```C#
+        public void Print<T>(T data) { Console.WriteLine(data); }
+        ```
+        - 위 3개의 메서드를 아래의 하나의 메서드로 퉁칠 수 있음
+        - 대문자 T는 아무거나 사용해도 무방. 대문자 한글자를 선호
+        - 제네릭 클래스
+        - where T : class -> 참조형식(클래스)만 허용
+        - where T : struct -> 값형식(기본 타입)만 허용
+        - where T : new() -> 매개변수 없는 생성자 필요
+        - where T : BaseClass -> 특정 클래스, 인터페이스 상속 필수
+
+        <img src="./image/cs0012.png" width="600">
+
+    6. 비동기, 스레드 - 소스
+
+        - UI 프로그램에 응답없음 발생
+
+        - 멀티프로세스 - 한꺼번에 여러개의 프로세스를 실행
+
+        - 스레드 - 프로세스에서 여러일을 한꺼번에 수행하기 위해 분리한 업무단위
+
+        - 멀티스레드 - 한 프로세스에서 여러 스레드 동작하는 것
+
+        - 응답없이 발생하면 프로그램의 신뢰도가 떨어짐
+
+        - 윈앱 - 싱글 스레드(UI가 스레드를 제어)
+
+        - 콘솔에는 실시간 출력, 텍스트박스, 프로그레스바 등 컨트롤 표시가 실시간으로 안됨
+
+        - 첫번째 해결방법
+            - Application.DoEvents() 메서드 추가. 권장X
+
+        - 두번째 해결방법
+            - 전통적인 스레드 사용. 권장하지만 난이도 상
+
+        - `세번째` 해결방법
+            - 비동기 async, await 키워드로 해결
+            - 응답없음은 나타나지 않음. 진행바 처리
+            - 로직복잡해도 소스코드는 간결
+
+        - `네번째` 해결방법
+            - BackgroundWorker 클래스 사용 - 내일 처리
+            - 최하 난이도
+            - 이벤트 종류가 많아서 소스코드는 길이가 김
+
+            <img src="./image/cs0013.png" width="600">
 
 ## 6일차
 
-### C# 응용 - WPF
-- WPF기본
+### 윈앱 컨트롤 5
+- `BackgroundWorker` : 화면 뒷단에서 작업할 일 중에서 스레드 처리가 되어야할 부분을 손쉽게 동작시켜주는 컨트롤(화면표시X)
+    - Bgw~ 이름을 사용
+    - 일반 속성은 잘 사용안함. 이벤트 3가지는 모두 사용
+    - `Dowork` : 백그라운드(스레드) 작업
+    - `ProgressChanged` : UI상 변화를 처리 작업
+    - `RunWorkerCompleted` : 작업완료시 대부분 UI완료 처리
+
+- `CheckBox` : 여러개에서 다수를 선택할 수 있는 컨트롤(라디오버튼과 동작이 반대)
+    - Chk~ 로 이름 사용
+    - Checked : 선택 여부
+    - CheckState : 체크를 안한 상태
+        - UnChecked : 체크를 안한 상태
+        - Checked : 체크한 상태
+        - Intermediate : 모호한 상태(하위 체크가 일부는 체크, 일부는 체크안됐을때)
+    - CheckedChanged : 기본이벤트, 체크상태가 변경되면 발생
+
+- `TrackBar` : 사운드, 화면밝기등 최소, 최대를 스크롤로 조정하는 컨트롤
+    - Trb~ 이름 사용
+    - Minimum, Maximum : ProgressBar와 동일
+    - TickFrequenccy : 간격표시 줄 간격
+    - Scroll : 기본이벤트. 가로로 스크롤 이동시 발생하는 이벤트
+
+- `TreeView` : 탐색기 하드디스크, 폴더 나타내는 부분과 동일한 컨트롤
+    - Trv~
+    - ImageList : 아이콘 이미지 설정
+    - AfterSelect, AfterExpand, AfterCollapse 이벤트를 주로 사용
+
+- `ListView` : 탐색기 오른쪽 목록을 표시하는 사용하는 컨트롤
+    - Lsv~
+    - View : LargeIcon, SmallIcon, List, Detail 등 탐색기 보기 기능과 동일
+    - SmallImageList, LargeImageList로 아이콘 이미지 설정
+    - SelectedIndexChanged : 아이템 선택이 변경될때 이벤트 발생
+
+- `MonthCalendar` : 스케줄 등록을 위한 컨트롤
+    - Cal~ 로 이름 사용
+    - FirstDayOfWeek : 한주 시작일을 설정. default는 일요일 부터
+    - DateChanged : 기본 이벤트, 날짜 변경시 발생
+
+- `DateTimePicker` : 단순 일자 선택하는 컨트롤
+    - Dtp~ 로 이름 사용
+    - 속성, 이벤트 거의 사용안함
+
+- `LinkLabel` : 링크 클릭 컨트롤
+    - 기존 Label 컨트롤과 유사
+    - LinkClicked : 버튼과 같이 클릭하는 이벤트
+
+- `MenuStrip` : 프로그램 메뉴관리
+    - Mnu~ 이름시작. 사용하는 메뉴는 반드시 이름을 변경할 것 (예 : 끝내기XMenustrip)와 같이 이름이 생성
+    - 메뉴 이름 작성시 (&X)와 같이 사용하면 영문자아래 밑줄 표시
+    - Click : 해당메뉴 클릭 이벤트
+
+- `ToolTip` : 각 컨트롤에 튤팁아이콘 표시 컨트롤
+    - 튤팁컨트롤 하나로 모든 컨트롤 튤팁 관리 가능
+    - Form_Load에서 작성
+
+### C# 문법
+- C# 기본
+    - enum : 열거형, 필요한 목록의 수로된 키값을 문자로 변경해서 사용하는 구조체
+    - 이진 &(And), |(Or) 연산으로 처리할때 효과적
+
+    ```cs
+    public enum FontStyle
+    {
+    Regular = 0,    // 일반 글씨.   0000
+    Bold = 1,       // 굵은체,      0001
+    Italic = 2,     // 이탤릭,      0010
+    Underline = 4,  // 밑줄,        0100
+    Strikeout = 8,  // 취소선,      1000
+    }
+    ```
+
+    - 모달창, 모달리스창 : 창위에 다른 창을 띄울때 접근권한 제어 형태
+        - Modal : 부모창과 연관된 작업을 할때 사용. 모달창이 닫히지 않으면 부모창을 제어할 수 없음
+        - Modaless : 부모창과 상관없이 동작. 메인창을 언제나 닫을 수 있고, 메인창은 받으면 모두 종료. 사용시 주의
+        - 메시지박스 : 기본적으로 모달창으로 동작
+
+### C# 마지막
+- C# 고급
+    1. 비동기, 스레드 - [소스](./day06/Day06Study/SynstaxWinApp01/FrmMain.cs)
+        - BackgroundWorker 클래스 사용
+        - .NET에 특화된 스레드사용 클래스
+        - 전통적인 스레드를 쉽게 쓸 수 있게 변형
+        - this.Invoke, asyn, await, Task등 사용할 필요없음
+        - 취소 기능을 추가할 수 있음
+        - 복잡한 비동기 작업이 많으면 Task 기반을 사용 권장
+
+### WinForms 응용
+- 윈앱 응용개발
+    - UI 컨트롤 예제 - [소스](./day06/Day06Study/WinControlsApp/FrmMain.cs)
+
+    <img src="./image/cs0014.png" width="800">
 
 ## 7일차
 
+### C# 응용 - WPF
+- WPF 개요
+    - `Windows Presentation Foundation` 약자. 윈도우에서 표시하기위한 기초
+    - 윈앱(윈폼즈)을 개선한 버전. 이미지 표현이 비트맵방식(2D). 용량문제, 계단현상, 문제가 존재
+    - 비트맵방식의 문제를 해결 -> 벡터방식(텍스트). 속도개선, 용량절약
+
+- WPF 특징
+    - WPF UI 디자인에는 `벡터`방식 사용. 비트맵방식도 혼용가능
+    - `XAML` : xml기반의 디자인 문법으로 화면 UI를 디자인. PyQt와 동일
+        - 안드로이드 등 모바일 개발, 자바Fx, Qt디자인 등 화면 UI의 최신 트렌드
+    - HTML로 디자인하던 디자이너가 손십게 적용할 수 있음
+    - 백엔드는 C# 윈앱과 거의 동일, 프론트엔드만 차이
+        - 윈앱과는 다르게 코딩으로 디자인을 수행. 윈앱처럼 디자이너 사용 가능
+        - 디자이너 -> Blend for Visual Studio 디자인을 사용
+        - 개발자 -> VS에서 코딩으로 디자인
+
+    <img src="./image/cs0017.png" width="400">
+
+- XAML
+    - `eXtesible Application Markup Language` : XML 기반 언어
+    - WPF (Windows), UWP(Win, Linux, MacOS), MAUI(모바일) 동일하게 사용
+    - 태그형태로 디자인. <열린태그></닫힌태그>, <태그내 다른 태그없을때 />
+    ```xml
+    <Window x:Class="ex01_wpf_start.MainWindow"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:local="clr-namespace:ex01_wpf_start"
+            mc:Ignorable="d"
+            Title="MainWindow" Height="450" Width="800">
+        <Grid>
+            <Button x:Name="BtnClick" Content="CLICK" FontSize="40" FontFamily="NanumGothic" 
+            FontWeight="Bold" Click="BtnClick_Click" />
+        </Grid>
+    </Window>
+    ```
+
+- 각 프레임워크별 장점
+    - 윈앱(윈폼) - 오래된 기술로 안정적. 상용/무료 서드파티 컨트롤이 많이 존재. 혼자 UI 개발할 때는 시간절약
+    - WPF
+        - 비교적 최신기술
+        - MS가 출시하는 대부분의 윈앱이 WPF로 개발
+        - UI 디자인이 매우 세련됨. 키오스크 등 개발에 많이 활용
+        - 디자인 감각만 있으면 직접 컨트롤 제작이 용이
+        - 디자이너와 개발자의 업무를 분리작업이 쉬움
+        - GPU를 사용해서 GUI 랜더링을 해서 윈앱보다 성능이 뛰어남
+        - 모바일, UWP 등도 동일하게 개발 가능
+
+- WPF 컴포넌트(실무에서 쓰이는 UI컴포넌트) - Third Party
+    - (상용)텔레릭 - https://www.telerik.com/
+    - (상용)데브익스프레스 - https://www.devexpress.com/
+    - (상용)인프라지틱스 - https://www.infragistics.com/
+    - **(무료)마하앱** - https://mahapps.com/
+
+### WPF 개발방법 및 컨트롤 1
+- **WPF 애플리케이션** 선택 - [소스](./day07/Day07Study/WpfStudyApp01/MainWindow.xaml.cs)
+    - 나머지는 동일
+
+- WPF 프로젝트 구조
+    - 종속성 : 필요한 라이브러리 관리
+        - NuGet Package로 외부라이브러리 설치
+    - App.xaml : 앱 실행을 관리하는 리소스
+        - App.xaml.cs : 비하인드 C# 코드
+        - 윈앱에 Program.cs와 동일
+    - MainWindow.xaml : Form1.Designer.cs와 동일한 디자인 파일
+        - MainWindow.xaml.cs : Form1.cs 소스코드와 동일
+
+- WPF 기본개발 윈앱과 거의 일치
+
+- WPF 실제개발법(XAML) - [소스](./day07/Day07Study/WpfStudyApp02/MainWindow.xaml)
+    - Window : 전체 partial클래스
+        - MainWindow.xaml.cs와 컴파일시 하나로 통합
+    - UI작업, 레이아웃 설계부터 시작
+    - **Grid** 컨트롤 : WPF에서 가장 많이 사용하는 레이아웃(중요!!)
+    - 내부에 위치하는 컨트롤이 그리드를 채워서 표시
+        - `Grid.Row`, `Grid.Column` : 그리드 상 컨트롤 위치할 행과 열 인덱스
+        - Margin : 외부여백
+            - 10 : 전체다 10의 공백을 여백
+            - 10, 20 : 왼쪽/오른쪽 여백, 위/아래 여백
+            - 10,5,20,30 : 왼쪽,위,오른쪽,아래 여백
+        - Padding : 컨트롤 내부여백
+        - 디자인할 창의 구역을 나눌때 사용
+
+        ```xml
+        <!-- Xaml에서 화면구역 나누기 -->
+        <Grid.ColumnDefinitions></Grid.ColumnDefinitions>
+        <Grid.RowDefinitions></Grid.RowDefinitions>
+        ```
+    - Widht/Height * : 배수를 뜻함
+    - ColumnDefinition - Width에 숫자 + *
+    - RowDefinition - Height에 숫자 + *
+    - 숫자만 사용하면 크기 고정
+    - Row, Column을 세 부분으로 나눈뒤
+    - 중앙 외에는 고정된 값으로 지정
+    - 외부 Grid와 내부 Grid로 나눠서 작업 수행
+
+    <img src="./image/cs0015.png" width="600">
+
+    - Responsive UI 사용 - WPF의 기본 디자인 정책
+
+    - `StackPanel` : 스택처럼 컨트롤을 쌓는 레이아웃
+        - `Orientation` : Vertical(기본), Horizontal
+        - Padding 이 없음. 내부 컨트롤에 Margin으로 처리
+    
+    - DockPanel : 윈에 Dock 속성과 동일
+        - `DockPanel.Dock` : Left, Right, Top, Bottom
+
+    - WrapPanel : 넓이 영역을 벗어나면 아래로 위치되는 레이아웃
+        - 왼쪽부터 오른쪽으로 컨트롤 위치시킴
+        - 컨트롤의 길이가 전체 넓이를 벗어나면 아래로 위치
+
+    - `Canvas` : 컨트롤 자체 좌표를 제공하는 레이아웃
+        - Canvas.Left, Right, Top, Bottom
+
+- 데이터바인딩 - [디자인](./day07/Day07Study/WpfStudyApp04/MainWindow.xaml) / [소스](./day07/Day07Study/WpfStudyApp04/MainWindow.xaml.cs)
+    - 바인딩 방법
+        1. 컬렉션을 생성해서 데이터를 컨트롤에 할당
+        2. DB에서 데이터 가져온뒤 컨트롤에 할당
+
+    - 바인딩 방식
+        1. 직접코드 할당방식
+            - CboCollection.ItemsSource = fruitItems;
+            - 기존 윈앱 방식과 동일
+            - 메모리에 있는 fruitItems 데이터를 대입(할당)
+            - DataContext와 관계 없음
+            - 단순한 속성 사용방식
+        2. XAML Binding 방식 : MVVM 디자인패턴시 필수
+            - {Binding fruitItems}
+            - DataContext 기반으로 속성명 fruitItems를 검색
+            - DataContext에 없으면 실패
+            - BindingManager가 작업을 수행
+            - DataContext는 컨트롤 자체에 할당해도 됨
+
+    - ItemsSource : 각 컨트롤이 데이터를 바인딩하는 속성
+    - DataContext : Xaml이 데이터를 어디에서 가져오는지 설정하는 속성
+        - 데이터 한건만 설정X
+        - 클래스 객체를 패키지로 전달 가능
+
+    - 바인딩 순서
+        1.  WPF 바인딩 엔진은 DataContext 객체 안에서 public 접근제어자의 fruitItems라는 값을 검색
+        2. this.DataContext 설정이 없으면 null 상태
+        3. this.DataContext = this로 할당 -> xaml로 전달
+
+    - 바인딩 모드 : 총 4가지 모드. 그중 2가지만 알면됨
+        1. `TwoWay` : 사용중인 곳의 데이터가 변경되면 <-> 원본도 변경
+        2. `OneWay` : 원본데이터 -> 사용중데이터도 변경
+        3. OneWayToSource : 사용중데이터 변경 -> 원본을 변경
+        4. OneTime : 앱 시작시 최초에만 사용할 데이터에 업데이트
+
+- 데이터베이스 데이터 바인딩
+    1. `NuGet 패키지` 관리자 - 파이썬의 pip 역할
+        - MySQL 검색 후
+        - MySQL.Data 선택, 프로젝트 선택 후
+        - 설치
+    2. 콤보박스 추가
+    3. 비하인드 코드에서 MySQL 소스 추가
+        - DB연결문자열 : connectionString
+        - 쿼리문자열 : query
+        - DB연결객체 : MySqlConnection
+        - 명령실행객체 : MySqlCommand(쿼리문 실행)
+        - 실행결과리더객체 : MySqlDataReader(쿼리결과 데이터)
+        - 트랜잭션객체 : 옵션.트랜잭션 처리시 필요
+
+    <img src="./image/cs0016.png" width="600">
+
 ## 8일차
 
+### WPF 개발방법 및 컨트롤 2
+- 데이터베이스 데이터 바인딩
+    - Xaml Binding 방식
+
+- 네비게이션
+    - 화면전환
+
+- 컨트롤 디자인, 리소스
+    - 
+
+
 ## 9일차
+
+### C# 응용 - WPF
+- WPF 기본
 
 ## 10일차
 

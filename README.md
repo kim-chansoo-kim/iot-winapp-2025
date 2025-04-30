@@ -1099,7 +1099,7 @@ IoT 개발자 C#/winApp 리포지토리 2025
 ### 코딩테스트
 
 ### 토이프로젝트 제작기
-- 식단 칼로리 기록기 (Diet Tracker)
+- 식단 칼로리 기록기 (Diet Tracker) - [소스](./ToyProject/CodingTest/ToyProject01/FrmMain01.cs)
     - 소개 : Windows Forms 기반의 간단한 식단 및 칼로리 관리 애플리케이션입니다.
     음식 이름, 칼로리, 식사 종류, 날짜를 입력하여 일별 식단을 기록하고, 총 섭취 칼로리를 계산하여 확인할 수 있습니다.
     
@@ -1129,32 +1129,51 @@ IoT 개발자 C#/winApp 리포지토리 2025
         - 프로그램을 종료하면 입력 내용은 저장되지 않으므로 저장 버튼을 눌러 파일로 저장하세요.
 
     - 제작 과정
-        - 윈앱 화면 디자인
-            - Form
-                1. 사이즈 조정 - 800, 500
-                2. 스타트 포지션 - CenterScreen
-                3. MaximizeBox - False
-                4. Text - 식단/칼로리 관리 프로그램
+        - 주요 UI 구성 요소
+            - **폼**(Form)
+                | 속성        | 설정 값                          |
+                |-------------|----------------------------------|
+                | Size        | 800 × 500                        |
+                | StartPosition | CenterScreen                   |
+                | MaximizeBox | False                            |
+                | Text        | 식단/칼로리 관리 프로그램        |
             
-            - Label - 각 라벨별 이름을 부여
+            - **Label** 
+                - 각 항목(음식명, 칼로리, 식사 종류 등)을 구분하기 위해 사용
+                - 이름과 위치에 맞춰 명확한 라벨 부여
 
-            - TextBox - 음식명과 칼로리의 입력을 받을 TxtFood, TxtCal
+            - **TextBox** 
+                - TxtFood: 음식명을 입력 받음
+                - TxtCal: 칼로리를 숫자로 입력 받음
             
-            - ComboBox - 시간대별로 아침, 점심, 저녁, 간식을 콤보박스 아이템에 저장
+            - **ComboBox** 
+                - CboMeal: 식사 시간대 선택용
+                    - 아침, 점심, 저녁, 간식
 
-            - DateTimePicker - 날짜별 정리를 위해 사용
+            - **DateTimePicker** 
+                - 날짜 선택용
+                - 식단 기록을 날짜별로 정리하기 위해 사용
 
-            - RichTextBox - 기입한 내용들을 표시할 리치텍스트박스
+            - **RichTextBox** 
+                - 사용자가 입력한 식단 내역을 보기 좋게 표시하는 영역
+                - `AppendText()`로 새로운 항목을 계속 추가
 
-            - Button
-                1. 추가 버튼(BtnAdd) - 기입한 내용들을 정리해서 RichTextBox로 보내고 칼로리를 합산해서 표시
-                2. 저장 버튼(BtnSave) - RichTextBox에 추가된 텍스트를 .txt파일 형식으로 저장
-                3. 읽기 버튼(BtnLoad) - 저장된 .txt파일을 불러옴
-                4. 삭제 버튼(BtnDel) - RichTextBox를 비움
+            - **Button**
+                | 버튼 이름     | 설명 |
+                |---------------|------|
+                | **BtnAdd**     | 입력된 정보(음식명, 칼로리, 식사시간, 날짜)를 RichTextBox에 추가하고 총 칼로리를 합산하여 표시 |
+                | **BtnSave**    | RichTextBox의 내용을 `.txt` 파일로 저장 |
+                | **BtnLoad**    | 저장된 `.txt` 파일을 불러와 RichTextBox에 표시하고, 총 칼로리를 재계산 |
+                | **BtnDel**     | RichTextBox 내용을 모두 지우고, 총 칼로리를 0으로 초기화 |
 
-            - SaveFileDialog - 사용자가 파일을 저장할 위치와 이름을 지정할 수 있게 해줌 
+            - **SaveFileDialog** 
+                - 사용자가 .txt 형식으로 저장할 위치와 파일명을 지정할 수 있도록 함
+                - 기본 파일명: diet.txt
+                - 필터: "텍스트 파일 (*.txt)|*.txt"
 
-            - OpenFileDialog - 사용자가 기존 파일을 선택해서 열도록 도와줌
+            - **OpenFileDialog**
+                - 기존에 저장된 텍스트 파일을 선택하여 불러오기 가능
+                - 필터: "Txt파일 (*.txt)|*.txt"
 
     - 실행 결과
 

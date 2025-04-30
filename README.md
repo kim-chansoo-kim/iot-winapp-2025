@@ -1158,4 +1158,7 @@ IoT 개발자 C#/winApp 리포지토리 2025
 
     - 실행 결과
 
+
+    https://github.com/user-attachments/assets/d74b36c3-7b2a-4f8c-abfb-0bc945e7dd55
+
     

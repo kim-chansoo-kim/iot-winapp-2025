@@ -828,7 +828,9 @@ IoT 개발자 C#/winApp 리포지토리 2025
     - 참조 - https://github.com/Carlos487/awesome-wpf
     - 상용 컴포넌트 제외
     - **MahApps.Metro** - https://mahapps.com/
-    - **WPF UI** - https://github.com/lepoco/wpfui
+        - github - https://github.com/MahApps/MahApps.Metro
+    - **WPF UI** - https://wpfui.lepo.co/
+        - https://github.com/lepoco/wpfui
     - Material Design InXAML Toolkit - http://materialdesigninxaml.net/
 
 ### WPF 개발방법 및 컨트롤 1
@@ -979,6 +981,7 @@ IoT 개발자 C#/winApp 리포지토리 2025
 ### MahApps.Metro 프레임워크
 - 공식사이트 - https://mahapps.com/
     - 최소한 노력으로 Metro UI/Modern UI를 적용시킬 수 있는 프레임워크
+    - 2011년 개발시작, 2014년 1.0배포. 현재 2.4.10
     - Metro UI, Modern UI - MS에서 시작한 디자인 스타일
     - 깔끔하고 입체감을 최소화 시킴
 
@@ -991,6 +994,21 @@ IoT 개발자 C#/winApp 리포지토리 2025
     3. https://github.com/MahApps/MahApps.Metro.IconPacks
         - IconPacks.Browser-net8-v2.0.0.zip 설치
     4. App.xaml에 필요한 리소스 코드 복붙
+
+        ```xml
+        <Application.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
+                    <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                    <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                    <!-- Theme setting -->
+                    <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+        </Application.Resources>
+        ```
+
     5. MainWindow.xaml.cs
         - Window -> MetroWindow로 변경
     6. MainWindow.xaml
@@ -1011,9 +1029,133 @@ IoT 개발자 C#/winApp 리포지토리 2025
 
 ## 9일차
 
-### C# 응용 - WPF
-- WPF 기본
+### MahApps.Metro 프레임워크
+- 컨트롤 사용법 - [소스](./day09/Day09Study/WpfStudyApp05/MainWindow.xaml)
+    - ProgressBar, MetroProgressBar, ProgressRing
+    - TabControl
+
+### VS Tip
+- 프로젝트는 제거해도 폴더에 파일은 그대로 존재
+    - 윈도우 탐색기에서 폴더 삭제 요망
+
+### WPF UI 프레임워크
+- 개요
+    - Fluent UI라는 이름의 Modern UI의 한 스타일 UI 프레임워크
+    - 2011년 1.0배포, 현재 버전 4.0.2
+
+- 기본 사용법 - [소스](./day09/Day09Study/WpfStudyApp07/MainWindow.xaml)
+    - NuGet 패키지 관리자 > WPF-UI 검색 후 설치
+    - VS Extension for WPF UI
+        - 메뉴 확장 > 확장관리
+        - WPF-UI 검색 후 설치
+        - VS 종료
+        - VSIS Installer 시작 > Modify 선택
+    - VS Project > WPF UI프로젝트 선택
+    - MainWindow.xaml을 추가 생성
+    - App.xaml.cs 오픈 - [소스](./day09/Day09Study/WpfStudyApp07/App.xaml.cs)
+        ```cs
+        private static readonly IHost _host = Host
+            .CreateDefaultBuilder()
+            .ConfigureAppConfiguration(c => { c.SetBasePath(Path.GetDirectoryName(AppContext.BaseDirectory)); })
+            .ConfigureServices((context, services) =>
+            {
+                // 이부분 주석처리
+                // throw new NotImplementedException("No service or window was registered.");
+                // 아래부분추가
+                services.AddSingleton<MainWindow>();
+            }).Build();
+
+        private async void OnStartup(object sender, StartupEventArgs e)
+            {
+                await _host.StartAsync();
+                // MainWindow 인스턴스 생성
+                var mainWindow = _host.Services.GetRequiredService<MainWindow>();
+                MainWindow.Show();
+            }
+        ```
+    - MainWindow.xaml xmlns:ui 추가. App.xaml과 동일
+        ```xml
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        ```
+    - MainWindow.xaml Window -> ui:FluentWindow 변경
+    - Grid 내에 타이틀바 추가
+        ```xml
+        <ui:TitleBar Title="WPF UI App" />
+        ```
+
+    - Theme를 Dark로 했을경우 
+        - Window 전체 Background를 어두운 색으로 지정한뒤 작업
+
+    - 실행결과
+
+        - Dark Theme
+        <img src="./image/cs0022.png" width="600">
+
+        - Light Theme
+        <img src="./image/cs0023.png" width="600">
 
 ## 10일차
 
 ### 코딩테스트
+
+### 토이프로젝트 제작기
+- 식단 칼로리 기록기 (Diet Tracker)
+    - 소개 : Windows Forms 기반의 간단한 식단 및 칼로리 관리 애플리케이션입니다.
+    음식 이름, 칼로리, 식사 종류, 날짜를 입력하여 일별 식단을 기록하고, 총 섭취 칼로리를 계산하여 확인할 수 있습니다.
+    
+    - 사용 기술
+        - 언어: C#
+
+        - UI 프레임워크: Windows Forms (WinForms)
+
+        - 저장 형식: .txt 파일 (UTF-8 인코딩)
+
+    - 주요 기능
+
+        | 기능 | 설명 |
+        |------|------|
+        | 음식 기록 추가 | 음식명, 칼로리, 식사 종류, 날짜를 입력하면 하단 메모창에 자동 추가 |
+        | 총 칼로리 계산 | 입력한 칼로리를 누적하여 화면에 표시 |
+        | 파일 저장 | 현재까지 입력된 식단을 `.txt` 파일로 저장 |
+        | 파일 불러오기 | 저장된 텍스트 파일을 다시 읽어오기 및 총 칼로리 자동 계산 |
+        | 전체 삭제 | 입력된 모든 내용과 총 칼로리 초기화 |
+
+        <img src="./image/CT01.png" width="600">
+
+        <img src="./image/CT02.png" width="600">
+
+    - 비고
+        - 잘못된 칼로리 입력(예: 문자 포함)은 무시됩니다.
+        - 프로그램을 종료하면 입력 내용은 저장되지 않으므로 저장 버튼을 눌러 파일로 저장하세요.
+
+    - 제작 과정
+        - 윈앱 화면 디자인
+            - Form
+                1. 사이즈 조정 - 800, 500
+                2. 스타트 포지션 - CenterScreen
+                3. MaximizeBox - False
+                4. Text - 식단/칼로리 관리 프로그램
+            
+            - Label - 각 라벨별 이름을 부여
+
+            - TextBox - 음식명과 칼로리의 입력을 받을 TxtFood, TxtCal
+            
+            - ComboBox - 시간대별로 아침, 점심, 저녁, 간식을 콤보박스 아이템에 저장
+
+            - DateTimePicker - 날짜별 정리를 위해 사용
+
+            - RichTextBox - 기입한 내용들을 표시할 리치텍스트박스
+
+            - Button
+                1. 추가 버튼(BtnAdd) - 기입한 내용들을 정리해서 RichTextBox로 보내고 칼로리를 합산해서 표시
+                2. 저장 버튼(BtnSave) - RichTextBox에 추가된 텍스트를 .txt파일 형식으로 저장
+                3. 읽기 버튼(BtnLoad) - 저장된 .txt파일을 불러옴
+                4. 삭제 버튼(BtnDel) - RichTextBox를 비움
+
+            - SaveFileDialog - 사용자가 파일을 저장할 위치와 이름을 지정할 수 있게 해줌 
+
+            - OpenFileDialog - 사용자가 기존 파일을 선택해서 열도록 도와줌
+
+    - 실행 결과
+
+    

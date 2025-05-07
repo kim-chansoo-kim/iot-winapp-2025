@@ -6,6 +6,7 @@ namespace ToyProject01
     public partial class FrmMain01 : Form
     {
         private int totalCalories = 0;
+
         public FrmMain01()
         {
             InitializeComponent();
@@ -13,79 +14,56 @@ namespace ToyProject01
 
         private void BtnAdd_Click(object sender, EventArgs e)
         {
-            // Step 1. 입력값 가져오기
             string food = TxtFood.Text;
-            string calories = TxtCal.Text;
-            string mealType = CboMeal.SelectedItem?.ToString() ?? "";
-            string date = dateTimePicker1.Value.ToString("yyyy-MM-dd"); // 날짜만 가져옴
+            string calText = TxtCal.Text;
+            string meal = CboMeal.SelectedItem?.ToString() ?? "";
+            string date = dateTimePicker1.Value.ToString("yyyy-MM-dd");
 
-            // Step 2. 리치텍스트박스에 내용 추가
-            string newEntry = $"[{date}] {mealType} - {food} : {calories} kcal";
-            RtbNote.AppendText(newEntry + Environment.NewLine);
+            string entry = $"[{date}] {meal} - {food} : {calText} kcal";
+            RtbNote.AppendText(entry + Environment.NewLine);
 
-            // Step 3. 총 칼로리 합산
-            if (int.TryParse(calories, out int calorieValue))
-            {
-                totalCalories += calorieValue;
-            }
+            if (int.TryParse(calText, out int cal))
+                totalCalories += cal;
 
-            // Step 4. 총 칼로리 업데이트
-            UpdateTotalCalories();
-
-            // Step 5. 입력 필드 초기화
-            ResetInputs();
-        }
-
-        private void UpdateTotalCalories()
-        {
-            // 총 칼로리를 라벨에 표시
-            LblTotalCalories.Text = $"총 칼로리: {totalCalories} kcal";
+            UpdateCalories();
+            ClearInputs();
         }
 
         private void BtnSave_Click(object sender, EventArgs e)
         {
             DlgSave.FileName = "diet.txt";
             DlgSave.Filter = "텍스트 파일 (*.txt)|*.txt";
-            DlgSave.Title = "문서파일 저장";
 
             if (DlgSave.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
-                    var fullPath = DlgSave.FileName;
-                    var contentToSave = RtbNote.Text;
-                    File.WriteAllText(fullPath, contentToSave, Encoding.UTF8);
-
-                    MessageBox.Show("파일이 저장되었습니다.", "파일저장",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    File.WriteAllText(DlgSave.FileName, RtbNote.Text, Encoding.UTF8);
+                    MessageBox.Show("파일이 저장되었습니다.", "저장", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
                 {
-                    ShowError($"저장 실패 : {ex.Message}");
+                    ShowError($"저장 실패: {ex.Message}");
                 }
             }
         }
 
         private void BtnLoad_Click(object sender, EventArgs e)
         {
-            DlgOpen.FileName = string.Empty;
-            DlgOpen.Filter = "Txt파일 (*.txt)|*.txt";
-            DlgOpen.Title = "문서파일 읽기";
+            DlgOpen.Filter = "텍스트 파일 (*.txt)|*.txt";
 
             if (DlgOpen.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
-                    var fullPath = DlgOpen.FileName;
-                    var fileContent = File.ReadAllText(fullPath, Encoding.UTF8);
-                    RtbNote.Text = fileContent;
-
-                    totalCalories = CalculateTotalCalories(fileContent);
-                    UpdateTotalCalories();
+                    string content = File.ReadAllText(DlgOpen.FileName, Encoding.UTF8);
+                    RtbNote.Text = content;
+                    totalCalories = SumCalories(content);
+                    UpdateCalories();
                 }
                 catch (Exception ex)
                 {
-                    ShowError($"읽기 실패 : {ex.Message}");
+                    ShowError($"읽기 실패: {ex.Message}");
                 }
             }
         }
@@ -94,10 +72,15 @@ namespace ToyProject01
         {
             RtbNote.Clear();
             totalCalories = 0;
-            UpdateTotalCalories();
+            UpdateCalories();
         }
 
-        private void ResetInputs()
+        private void UpdateCalories()
+        {
+            LblTotalCalories.Text = $"총 칼로리: {totalCalories} kcal";
+        }
+
+        private void ClearInputs()
         {
             TxtFood.Clear();
             TxtCal.Clear();
@@ -105,30 +88,26 @@ namespace ToyProject01
             dateTimePicker1.Value = DateTime.Now;
         }
 
-        private void ShowError(string message)
+        private void ShowError(string msg)
         {
-            MessageBox.Show(message, "오류", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(msg, "오류", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        private int CalculateTotalCalories(string content)
+        private int SumCalories(string text)
         {
-            int total = 0;
-            var lines = content.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            int sum = 0;
+            var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 
             foreach (var line in lines)
             {
-                var parts = line.Split(new[] { ':' }, StringSplitOptions.None);
-                if (parts.Length > 1)
+                var parts = line.Split(':');
+                if (parts.Length > 1 && int.TryParse(parts[1].Trim().Replace(" kcal", ""), out int cal))
                 {
-                    var calorieText = parts[1].Trim().Replace(" kcal", "");
-                    if (int.TryParse(calorieText, out int calorie))
-                    {
-                        total += calorie;
-                    }
+                    sum += cal;
                 }
             }
 
-            return total;
+            return sum;
         }
     }
 }

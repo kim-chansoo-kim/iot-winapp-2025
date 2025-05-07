@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain01));
             LblFood = new Label();
             TxtFood = new TextBox();
             LblCal = new Label();
@@ -184,6 +185,7 @@
             Controls.Add(LblCal);
             Controls.Add(TxtFood);
             Controls.Add(LblFood);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             Name = "FrmMain01";
             StartPosition = FormStartPosition.CenterScreen;
